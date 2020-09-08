@@ -7,6 +7,7 @@ import compression from 'compression'; // gzip 압축 라이브러리: 성능향
 import cors from 'cors';
 import { buildSchema } from 'type-graphql';
 import { UserResolver } from './resolvers/UserResolver';
+import { createContext } from './context';
 
 const main = async () => {
   const schema = await buildSchema({
@@ -14,9 +15,13 @@ const main = async () => {
     emitSchemaFile: true,
     validate: false,
   });
+
+  const context = createContext();
+
   const server = new ApolloServer({
     schema,
     validationRules: [depthLimit(7)],
+    context,
   });
 
   const app = express();

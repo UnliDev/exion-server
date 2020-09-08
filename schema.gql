@@ -14,7 +14,11 @@ enum Gender {
   MALE
 }
 
-type Member {
+type Query {
+  members: [User!]!
+}
+
+type User {
   birthDate: DateTime
   gender: Gender
   height: Int
@@ -26,8 +30,4 @@ type Member {
   password: String!
   phoneNumber: String!
   weight: Int
-}
-
-type Query {
-  members: [Member!]!
 }
