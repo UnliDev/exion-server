@@ -1,2 +1,2 @@
-# src/generated
-.eslintrc.js
+src/generated
+migrations

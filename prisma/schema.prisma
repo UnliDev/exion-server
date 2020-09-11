@@ -2,14 +2,17 @@ generator client {
   provider = "prisma-client-js"
 }
 
-generator typegraphql {
-  provider = "node node_modules/typegraphql-prisma/generator.js"
-  output   = "../src/generated/typegraphql-prisma"
-}
-
 datasource db {
   provider = "mysql"
   url      = env("DATABASE_URL")
+}
+
+model Auth {
+  user_id Int
+  token   String @unique
+  User    User   @relation(fields: [user_id], references: [id])
+
+  @@index([user_id], name: "user_id")
 }
 
 model User {
@@ -24,6 +27,7 @@ model User {
   is_glasses   Boolean?     @default(dbgenerated())
   is_tattoo    Boolean?     @default(dbgenerated())
   is_dyeing    Boolean?     @default(dbgenerated())
+  Auth         Auth[]
 }
 
 enum User_gender {
