@@ -12,21 +12,21 @@ import { createContext } from './context';
 import { schema } from './schema';
 
 const main = async () => {
-  // const formatError = (err: any) => {
-  //   console.error("--- GraphQL Error ---");
-  //   console.error("Path:", err.path);
-  //   console.error("Message:", err.message);
-  //   console.error("Code:", err.extensions.code);
-  //   console.error("Original Error", err.originalError);
-  //   return err;
-  // };
+  const formatError = (err: any) => {
+    console.error("--- GraphQL Error ---");
+    console.error("Path:", err.path);
+    console.error("Message:", err.message);
+    console.error("Code:", err.extensions.code);
+    console.error("Original Error", err.originalError);
+    return err;
+  };
 
   const server = new ApolloServer({
     schema,
     validationRules: [depthLimit(7)],
     context: createContext,
     debug: process.env.NODE_ENV !== 'production',
-    // formatError,
+    formatError,
   });
 
   const app = express();

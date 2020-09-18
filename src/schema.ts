@@ -10,7 +10,7 @@ export const schema = makeSchema({
     nexusSchemaPrisma(),
     connectionPlugin({
       cursorFromNode(node) {
-        return node.id;
+        return node.id.toString(36);
       },
     }),
   ],
