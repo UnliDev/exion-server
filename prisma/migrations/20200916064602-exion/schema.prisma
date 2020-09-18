@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 model Profile {
@@ -33,10 +33,16 @@ model User {
   updatedAt         DateTime?           @default(now()) @updatedAt
   deletedAt         DateTime?
   lastSignedIn      DateTime?
-
   profile           Profile?
-  bookmark          Bookmark[]
-  schedule          Schedule[]
+}
+
+model Schedule {
+  id                Int                 @default(autoincrement()) @id  
+  step              Step
+  shootingId        Int                 
+  userId            Int
+  User              User                @relation(fields: [userId], references: [id])
+  Shooting          Shooting            @relation(fields: [shootingId], references: [id])
 }
 
 model Shooting {
@@ -48,38 +54,21 @@ model Shooting {
   content           String?  
   wage              Int?
   gender            User_gender?        
-  minHeight         Int?        
-  maxHeight         Int?        
-  minWeight         Int?        
-  maxWeight         Int?        
+  height            Int?        
+  weight            Int?        
   isGlasses         Boolean?        
   isTattoo          Boolean?        
   isDyeing          Boolean? 
   createdAt         DateTime?           @default(now())
   updatedAt         DateTime?           @default(now()) @updatedAt
   deletedAt         DateTime?
-
-  bookmark          Bookmark[]
-  schedule          Schedule[]
-}
-
-model Schedule {
-  id                Int                 @default(autoincrement()) @id
-  step              Step
-  shootingId        Int                 
-  userId            Int
-  User              User                @relation(fields: [userId], references: [id])
-  Shooting          Shooting            @relation(fields: [shootingId], references: [id])
 }
 
 model Bookmark {
-  createdAt              DateTime?               @default(now())
-
-  userId            Int
+  userId            Int                 @id
   shootingId        Int                 
   User              User                @relation(fields: [userId], references: [id])
   Shooting          Shooting            @relation(fields: [shootingId], references: [id])
-  @@id([userId, shootingId])
 }
 
 enum Profile_authType {

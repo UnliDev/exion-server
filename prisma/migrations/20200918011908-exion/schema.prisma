@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 model Profile {
@@ -36,7 +36,6 @@ model User {
 
   profile           Profile?
   bookmark          Bookmark[]
-  schedule          Schedule[]
 }
 
 model Shooting {
@@ -60,11 +59,10 @@ model Shooting {
   deletedAt         DateTime?
 
   bookmark          Bookmark[]
-  schedule          Schedule[]
 }
 
 model Schedule {
-  id                Int                 @default(autoincrement()) @id
+  id                Int                 @default(autoincrement()) @id  
   step              Step
   shootingId        Int                 
   userId            Int
