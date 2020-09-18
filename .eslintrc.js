@@ -22,5 +22,8 @@ module.exports = {
     "import/no-useless-path-segments": "off",
     "import/no-cycle": "off",
     "no-return-await": "off",
+    "no-nested-ternary": "off",
+    "consistent-return": "off",
+    "prefer-destructuring": "off",
   },
 };
