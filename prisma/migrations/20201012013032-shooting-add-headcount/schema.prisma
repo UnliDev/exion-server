@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 model Profile {
@@ -113,7 +113,6 @@ enum Step {
 }
 
 enum Schedule_Type {
-  apply
   fail
   waiting
   pass

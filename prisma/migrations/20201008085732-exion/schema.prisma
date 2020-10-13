@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
+  url = "***"
 }
 
 model Profile {
@@ -51,7 +51,6 @@ model Shooting {
   producer          String?
   shootingStartAt   DateTime?
   shootingEndAt     DateTime?
-  headCount         Int?
   content           String?  
   wage              Int?
   meetingPlace      String? 
@@ -113,7 +112,6 @@ enum Step {
 }
 
 enum Schedule_Type {
-  apply
   fail
   waiting
   pass
