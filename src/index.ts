@@ -37,7 +37,7 @@ const main = async () => {
   server.applyMiddleware({ app, path: '/graphql' });
 
   const httpServer = createServer(app);
-  httpServer.listen({ port: 4000 }, (): void => console.log('server Start: http://localhost:4000/graphql'));
+  httpServer.listen({ port: 4000 }, (): void => console.log(process.env.NODE_ENV !== 'local' ? 'server Start: http://52.78.21.150:4000/graphql' : 'server Start: http://localhost:4000/graphql'));
 };
 
 main().catch((error) => {
