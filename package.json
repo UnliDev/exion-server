@@ -41,7 +41,6 @@
     "graphql-subscriptions": "^1.1.0",
     "i18next": "^19.7.0",
     "jsonwebtoken": "^8.5.1",
-    "nexus": "^0.26.1",
     "nexus-plugin-prisma": "^0.21.0",
     "node-rsa": "^1.1.1",
     "reflect-metadata": "^0.1.13"
