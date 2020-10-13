@@ -1,7 +1,6 @@
 import { asNexusMethod, scalarType } from '@nexus/schema';
 
 import { GraphQLDate } from 'graphql-iso-date';
-import { GraphQLUpload } from 'graphql-upload';
 
 export enum AuthType {
   email = 'email',
@@ -54,6 +53,28 @@ export const step = scalarType({
   asNexusMethod: 'step',
   parseValue(value: Step): Step | undefined {
     if (Step[value]) {
+      return value;
+    }
+  },
+  serialize(value) {
+    return value;
+  },
+});
+
+export enum ScheduleType {
+  apply= 'apply',
+  fail= 'fail',
+  waiting= 'waiting',
+  pass= 'pass',
+  attending= 'attending',
+  cancel= 'cancel',
+}
+
+export const scheduleType = scalarType({
+  name: 'ScheduleType',
+  asNexusMethod: 'scheduleType',
+  parseValue(value: ScheduleType): ScheduleType | undefined {
+    if (ScheduleType[value]) {
       return value;
     }
   },

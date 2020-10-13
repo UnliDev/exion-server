@@ -7,3 +7,11 @@ export const AuthPayload = objectType({
     t.field('user', { type: 'User' });
   },
 });
+
+export const AuthPayloadAdmin = objectType({
+  name: 'AuthPayloadAdmin',
+  definition(t) {
+    t.string('token');
+    t.field('admin', { type: 'Admin' });
+  },
+});

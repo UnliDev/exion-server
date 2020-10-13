@@ -1,48 +1,81 @@
 import { intArg, mutationField, stringArg } from '@nexus/schema';
+import { ApolloError } from 'apollo-server-express';
 import { getUserId } from '../../../utils/auth';
 
-export const addSchedule = mutationField('addSchedule', {
-  type: "Schedule",
-  args: {
-    shootingId: intArg({ required: true }),
-  },
-  resolve: async (_, { shootingId }, ctx) => {
-    const myId = getUserId(ctx);
+export const scheduleMutationField = mutationField((t) => {
+  t.field('addSchedule', {
+    type: "Schedule",
+    args: {
+      shootingId: intArg({ required: true }),
+    },
+    resolve: async (_, { shootingId }, ctx) => {
+      const myId = getUserId(ctx);
 
-    return await ctx.prisma.schedule.create({
-      data: {
-        step: "screening",
-        Shooting: {
-          connect: {
-            id: shootingId,
+      if (!myId) throw new ApolloError('토큰을 찾을 수 없습니다', '403');
+
+      return await ctx.prisma.schedule.create({
+        data: {
+          Shooting: {
+            connect: {
+              id: shootingId,
+            },
+          },
+          User: {
+            connect: {
+              id: myId,
+            },
           },
         },
-        User: {
-          connect: {
-            id: myId,
-          },
+        include: {
+          Shooting: true,
+          User: true,
         },
-      },
-      include: {
-        Shooting: true,
-        User: true,
-      },
-    });
-  },
+      });
+    },
+  });
+  t.field('removeSchedule', {
+    type: "Schedule",
+    args: {
+      scheduleId: intArg({ required: true }),
+    },
+    resolve: async (_, { scheduleId }, ctx) => {
+      const myId = getUserId(ctx);
+
+      return await ctx.prisma.schedule.delete({
+        where: {
+          id: scheduleId,
+        },
+      });
+    },
+  });
 });
 
-export const removeSchedule = mutationField('removeSchedule', {
-  type: "Schedule",
-  args: {
-    scheduleId: intArg({ required: true }),
-  },
-  resolve: async (_, { scheduleId }, ctx) => {
-    const myId = getUserId(ctx);
+export const scheduleMutationAdminField = mutationField((t) => {
+  t.field('adminUpdateTypeSchedules', {
+    type: "Schedule",
+    list: true,
+    args: { scheduleInput: 'UpdateScheduleTypeInput' },
+    resolve: async (_, { scheduleInput }, ctx) => {
+      const { scheduleType, shootingId, scheduleIds } = scheduleInput!;
+      console.log('scheduleIds', scheduleIds);
+      await ctx.prisma.schedule.updateMany({
+        where: {
+          id: {
+            in: scheduleIds.filter((x): x is number => x !== null),
+          },
+        },
+        data: {
+          type: scheduleType,
+        },
+      });
 
-    return await ctx.prisma.schedule.delete({
-      where: {
-        id: scheduleId,
-      },
-    });
-  },
+      return await ctx.prisma.schedule.findMany({
+        where: {
+          id: {
+            in: scheduleIds.filter((x): x is number => x !== null),
+          },
+        },
+      });
+    },
+  });
 });

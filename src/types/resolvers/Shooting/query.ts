@@ -1,4 +1,4 @@
-import { intArg, queryField } from "@nexus/schema";
+import { intArg, queryField, stringArg } from "@nexus/schema";
 import { getUserId } from "../../../utils/auth";
 
 export const shootingQueryField = queryField((t) => {
@@ -65,6 +65,29 @@ export const shootingQueryField = queryField((t) => {
         orderBy: { id: 'desc' },
       });
       return bookmarkShootings;
+    },
+  });
+});
+
+export const shootingAdminQueryField = queryField((t) => {
+  t.connectionField('adminShootings', {
+    type: 'Shooting',
+    additionalArgs: { searchShooting: stringArg() },
+    async nodes(_, { searchShooting, after }, ctx) {
+      const cursor = after ? {
+        id: parseInt(after, 36),
+      } : undefined;
+      const id = after ? { not: parseInt(after, 36) } : undefined;
+
+      const shootings = await ctx.prisma.shooting.findMany({
+        cursor,
+        where: {
+          title: { contains: searchShooting || undefined },
+          id,
+        },
+        orderBy: { id: 'desc' },
+      });
+      return shootings;
     },
   });
 });

@@ -1,4 +1,4 @@
-import { queryField } from "@nexus/schema";
+import { intArg, queryField, stringArg } from "@nexus/schema";
 import { getUserId } from "../../../utils/auth";
 
 export const scheduleQueryField = queryField((t) => {
@@ -20,6 +20,32 @@ export const scheduleQueryField = queryField((t) => {
           Shooting: true,
         },
         orderBy: { id: 'desc' },
+      });
+      return scheduleShootings;
+    },
+  });
+});
+
+export const scheduleQueryAdminField = queryField((t) => {
+  t.connectionField('adminSchedules', {
+    type: 'Schedule',
+    additionalArgs: { shootingId: intArg({ nullable: false }) },
+    async nodes(_, { shootingId, after }, ctx) {
+      const cursor = after ? {
+        id: parseInt(after, 36),
+      } : undefined;
+      const id = after ? { not: parseInt(after, 36) } : undefined;
+
+      const scheduleShootings = await ctx.prisma.schedule.findMany({
+        cursor,
+        where: {
+          shootingId,
+          id,
+        },
+        include: {
+          Shooting: true,
+        },
+        orderBy: { type: 'desc' },
       });
       return scheduleShootings;
     },
