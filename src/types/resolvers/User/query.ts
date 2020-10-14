@@ -1,5 +1,5 @@
 import { queryField, stringArg } from '@nexus/schema';
-import { prisma } from 'nexus-plugin-prisma';
+import { ApolloError } from 'apollo-server-express';
 import { getUserId } from '../../../utils/auth';
 
 export const usersQueryField = queryField((t) => {
@@ -12,7 +12,7 @@ export const usersQueryField = queryField((t) => {
       } = args;
       const users = await ctx.prisma.user.findMany({
         where: {
-          name: { contains: searchText },
+          name: { contains: searchText || undefined },
         },
         orderBy: { id: 'desc' },
       });
@@ -26,6 +26,7 @@ export const usersQueryField = queryField((t) => {
     nullable: true,
     async resolve(_, args, ctx) {
       const userId = getUserId(ctx);
+      if (!userId) throw new ApolloError('유저를 찾을 수 없습니다', '403');
       const user = await ctx.prisma.user.findOne({
         where: {
           id: userId,

@@ -1,4 +1,5 @@
 import { mutationField, stringArg } from '@nexus/schema';
+import { ApolloError } from 'apollo-server-express';
 import { Context } from 'context';
 import { NexusGenRootTypes } from 'generated/nexus';
 import { sign } from 'jsonwebtoken';
@@ -78,10 +79,13 @@ export const signUp = mutationField('signUp', {
 export const signInPhoneNumber = mutationField('signInPhoneNumber', {
   type: 'AuthPayload',
   args: {
-    phoneNumber: stringArg({ nullable: false }),
-    password: stringArg({ nullable: false }),
+    phoneNumber: stringArg({ nullable: true }),
+    password: stringArg({ nullable: true }),
   },
   resolve: async (_, { phoneNumber, password }, ctx) => {
+    if (!phoneNumber) throw new ApolloError('전화 번호를 입력하지 않았습니다.', '403');
+    if (!password) throw new ApolloError('비밀 번호를 입력하지 않았습니다.', '403');
+
     const { pubsub } = ctx;
     const user = await ctx.prisma.user.findOne({
       where: {
@@ -89,14 +93,10 @@ export const signInPhoneNumber = mutationField('signInPhoneNumber', {
       },
     });
 
-    if (!user) {
-      throw new Error(`No user found for phoneNumber: ${phoneNumber}`);
-    }
+    if (!user) throw new ApolloError(`해당하는 유저를 찾을 수 없습니다. 전화번호: ${phoneNumber}`, '403');
 
     const passwordValid = await validateCredential(password, user.password || '');
-    if (!passwordValid) {
-      throw new Error('Invalid password');
-    }
+    if (!passwordValid) throw new ApolloError('비밀번호가 틀렸습니다.', '403');
 
     pubsub.publish(USER_SIGNED_IN, user);
 

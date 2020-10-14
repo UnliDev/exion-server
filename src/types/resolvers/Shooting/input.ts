@@ -3,9 +3,9 @@ import { inputObjectType } from "@nexus/schema";
 export const SearchShootingInputType = inputObjectType({
   name: 'SearchShootingInput',
   definition(t) {
-    t.string('title', { nullable: false });
-    t.date('startAt', { nullable: false });
-    t.date('endAt', { nullable: false });
+    t.string('title', { nullable: true });
+    t.date('startAt', { nullable: true });
+    t.date('endAt', { nullable: true });
   },
 });
 

@@ -19,9 +19,9 @@ export const shootingQueryField = queryField((t) => {
       const shootings = await ctx.prisma.shooting.findMany({
         cursor,
         where: {
-          title: { contains: title },
-          shootingStartAt: { lte: endAt },
-          shootingEndAt: { gte: startAt },
+          title: { contains: title || undefined },
+          shootingStartAt: { lte: endAt || undefined },
+          shootingEndAt: { gte: startAt || undefined },
           id,
         },
         orderBy: { id: 'desc' },
