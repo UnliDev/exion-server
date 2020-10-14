@@ -8,10 +8,20 @@ import { createServer } from 'http';
 import compression from 'compression'; // gzip 압축 라이브러리: 성능향상
 import cors from 'cors';
 import path from 'path';
+import dotenv from 'dotenv';
 import { createContext } from './context';
 import { schema } from './schema';
 
 const main = async () => {
+  const env = process.env.NODE_ENV;
+  const envPath = env === 'development'
+    ? path.resolve(__dirname, '../dotenv/dev.env')
+    : env === 'test'
+      ? path.resolve(__dirname, '../dotenv/test.env')
+      : path.resolve(__dirname, '../dotenv/.env');
+
+  dotenv.config({ path: envPath });
+
   const formatError = (err: any) => {
     console.error("--- GraphQL Error ---");
     console.error("Path:", err.path);
