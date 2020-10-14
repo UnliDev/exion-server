@@ -26,6 +26,7 @@ export const shootingQueryField = queryField((t) => {
         },
         orderBy: { id: 'desc' },
       });
+      console.log('shootings', shootings);
       return shootings;
     },
   });
