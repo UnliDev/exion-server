@@ -35,12 +35,15 @@ export const scheduleQueryAdminField = queryField((t) => {
         id: parseInt(after, 36),
       } : undefined;
       const id = after ? { not: parseInt(after, 36) } : undefined;
-
+      const shooting = await ctx.prisma.shooting.findOne({ where: { id: shootingId } });
       const scheduleShootings = await ctx.prisma.schedule.findMany({
         cursor,
         where: {
           shootingId,
           id,
+          type: {
+            in: shooting?.step === "screening" ? ['apply', 'pass', 'waiting'] : ['pass', "attending", "waiting", "cancel"],
+          },
         },
         include: {
           Shooting: true,

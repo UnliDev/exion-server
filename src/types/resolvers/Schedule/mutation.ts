@@ -57,7 +57,6 @@ export const scheduleMutationAdminField = mutationField((t) => {
     args: { scheduleInput: 'UpdateScheduleTypeInput' },
     resolve: async (_, { scheduleInput }, ctx) => {
       const { scheduleType, shootingId, scheduleIds } = scheduleInput!;
-      console.log('scheduleIds', scheduleIds);
       await ctx.prisma.schedule.updateMany({
         where: {
           id: {

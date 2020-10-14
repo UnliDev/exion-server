@@ -1,4 +1,5 @@
 import { intArg, mutationField } from '@nexus/schema';
+import { ApolloError } from 'apollo-server-express';
 import { getUserId } from '../../../utils/auth';
 
 export const addBookmark = mutationField('addBookmark', {
@@ -8,6 +9,8 @@ export const addBookmark = mutationField('addBookmark', {
   },
   resolve: async (_, { shootingId }, ctx) => {
     const myId = getUserId(ctx);
+
+    if (!myId) throw new ApolloError('토큰을 찾을 수 없습니다', '403');
 
     return await ctx.prisma.bookmark.create({
       data: {
