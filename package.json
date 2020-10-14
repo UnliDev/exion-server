@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "local": "dotenv -e ./dotenv/.env -- nodemon 'src' --exec 'ts-node-dev' src -e ts,graphql",
-    "dev": "ts-node-dev --respawn --transpile-only src",
+    "dev": "dotenv -e ./dotenv/dev.env -- ts-node-dev --respawn --transpile-only src",
     "start": "ts-node src",
     "clean": "rm -rf dist",
     "build": "npm -s run clean && npm -s run generate && tsc",

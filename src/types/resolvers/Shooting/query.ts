@@ -15,7 +15,6 @@ export const shootingQueryField = queryField((t) => {
         id: parseInt(after, 36),
       } : undefined;
       const id = after ? { not: parseInt(after, 36) } : undefined;
-      console.log('============test============');
       const shootings = await ctx.prisma.shooting.findMany({
         cursor,
         where: {
@@ -26,7 +25,6 @@ export const shootingQueryField = queryField((t) => {
         },
         orderBy: { id: 'desc' },
       });
-      console.log('shootings', shootings);
       return shootings;
     },
   });
